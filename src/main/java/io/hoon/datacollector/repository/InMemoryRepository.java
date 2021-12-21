@@ -2,25 +2,29 @@ package io.hoon.datacollector.repository;
 
 import io.hoon.datacollector.dto.CollectedDataDto;
 import io.hoon.datacollector.dto.DataCollectReqDto;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
+import org.springframework.stereotype.Component;
 
+@Component
 public class InMemoryRepository {
 
-    private static Set<CollectedDataDto> repository = new HashSet<>();
+    private Queue<CollectedDataDto> repository = new LinkedBlockingQueue<>();
 
-    public static boolean save(DataCollectReqDto dataCollectReqDto) {
-        return repository.add(new CollectedDataDto()
+    public boolean save(DataCollectReqDto dataCollectReqDto) {
+        return this.repository.add(new CollectedDataDto()
                 .setProdType(dataCollectReqDto.getProdType())
                 .setDataType(dataCollectReqDto.getDataType())
                 .setData(dataCollectReqDto.getData()));
     }
 
-    public static Set<CollectedDataDto> getData() {
-        return Set.copyOf(repository);
-    }
-
-    public static void removeData(Set<CollectedDataDto> deleteData) {
-        repository.removeAll(deleteData);
+    public List<CollectedDataDto> getData() {
+        List<CollectedDataDto> rtn = new ArrayList<>();
+        while (!this.repository.isEmpty()) {
+            rtn.add(this.repository.poll());
+        }
+        return rtn;
     }
 }

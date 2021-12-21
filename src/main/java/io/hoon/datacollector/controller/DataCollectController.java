@@ -5,7 +5,10 @@ import io.hoon.datacollector.dto.DataCollectReqDto;
 import io.hoon.datacollector.dto.DataCollectRespDto;
 import io.hoon.datacollector.repository.InMemoryRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,12 +17,20 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "데이터 수집")
 @RestController
 @RequestMapping("/data")
+@RequiredArgsConstructor
 public class DataCollectController {
+
+    private final InMemoryRepository inMemoryRepository;
 
     @PostMapping
     @Operation(summary = "데이터 수집 요청")
-    public CommonResponse<DataCollectRespDto> collectRequest(@RequestBody DataCollectReqDto dataCollectReqDto) {
-        InMemoryRepository.save(dataCollectReqDto);
-        return CommonResponse.of(new DataCollectRespDto());
+    public CommonResponse<DataCollectRespDto> collectRequest(@Parameter(name = "데이터 수집 요청 DTO", required = true)
+                                                             @RequestBody
+                                                             @Valid DataCollectReqDto dataCollectReqDto) {
+        boolean result = inMemoryRepository.save(dataCollectReqDto);
+        return CommonResponse.of(new DataCollectRespDto()
+            .setProdType(dataCollectReqDto.getProdType())
+            .setDataType(dataCollectReqDto.getDataType())
+            .setSuccess(result));
     }
 }
