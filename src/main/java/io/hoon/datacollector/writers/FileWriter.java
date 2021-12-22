@@ -42,6 +42,7 @@ public class FileWriter implements Writer{
 
     @Override
     public void write(Collection<CollectedDataDto> dataCollection) throws IOException {
+        //FIXME Collection 보다 개별 Object 를 각각 JSON String 으로 변환하는 것이 Data Shipper 에서 처리하기 편함.
         String valueAsString = objectMapper.writeValueAsString(dataCollection) + SEPARATOR;
         Files.write(this.filePath, valueAsString.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
     }
@@ -64,6 +65,7 @@ public class FileWriter implements Writer{
         String fileName = createFileName();
         Path path = Path.of(this.fileRootPath, fileName);
 
+        //FIXME Files.exists() 로 존재여부를 판단하기 보다, Files.write() 에 StandardOpenOption 을 넘겨서 아래 로직을 처리하도록 하는 것이 나음. "I/O는 최대한 Atomic 하게"
         if (!Files.exists(path)) {
             this.filePath = Files.createFile(path);
             log.info("파일이 생성되었습니다.");

@@ -18,6 +18,10 @@ public class InMemoryRepository {
     private Queue<CollectedDataDto> repository = new LinkedBlockingQueue<>();
 
     public boolean save(DataCollectReqDto dataCollectReqDto) {
+        /*
+         * FIXME Queue.add() 의 경우 예외를 던지기 때문에, 응답 데이터에 결과(boolean)을 전달하기 위해서는 Queue.offer() 를 사용하는 것이 나아보임.
+         *       엘리먼트 추가 실패 시 blocking 하고 대기하는 것이 안전할 것으로 보이기 때문에 Queue.put() 을 사용하는 것이 베스트.
+         */
         return this.repository.add(new CollectedDataDto()
                 .setProdType(dataCollectReqDto.getProdType())
                 .setDataType(dataCollectReqDto.getDataType())
