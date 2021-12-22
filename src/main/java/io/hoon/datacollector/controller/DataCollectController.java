@@ -3,7 +3,7 @@ package io.hoon.datacollector.controller;
 import io.hoon.datacollector.common.dto.CommonResponse;
 import io.hoon.datacollector.dto.DataCollectReqDto;
 import io.hoon.datacollector.dto.DataCollectRespDto;
-import io.hoon.datacollector.repository.InMemoryRepository;
+import io.hoon.datacollector.service.DataCollectorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,17 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DataCollectController {
 
-    private final InMemoryRepository inMemoryRepository;
+    private final DataCollectorService dataCollectorService;
 
     @PostMapping
     @Operation(summary = "데이터 수집 요청")
     public CommonResponse<DataCollectRespDto> collectRequest(@Parameter(name = "데이터 수집 요청 DTO", required = true)
                                                              @RequestBody
                                                              @Valid DataCollectReqDto dataCollectReqDto) {
-        boolean result = inMemoryRepository.save(dataCollectReqDto);
-        return CommonResponse.of(new DataCollectRespDto()
-            .setProdType(dataCollectReqDto.getProdType())
-            .setDataType(dataCollectReqDto.getDataType())
-            .setSuccess(result));
+        return CommonResponse.of(dataCollectorService.collectData(dataCollectReqDto));
     }
 }
