@@ -16,6 +16,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * <h1>로컬 파일 저장 클래스</h1>
+ * 전달받은 수집 데이터를 {@code .txt} 파일로 저장합니다. 데이터가 작성되는 파일은 1시간 마다 새로 생성됩니다.
+ *
+ * @see io.hoon.datacollector.writers.Writer
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor

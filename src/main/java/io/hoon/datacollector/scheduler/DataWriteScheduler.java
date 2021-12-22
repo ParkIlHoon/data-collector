@@ -10,6 +10,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+/**
+ * <h1>데이터 작성 스케쥴러</h1>
+ * 1초마다 {@link io.hoon.datacollector.repository.InMemoryRepository 임시 저장소}에 저장된 {@link CollectedDataDto 수집 데이터}를 구현된 {@link Writer} 클래스를 통해 작성합니다.<br>
+ * 아래의 경우 데이터를 작성하지 않고 스케쥴이 종료됩니다.
+ * <ul>
+ *     <li>구현된 {@link Writer} Bean 이 존재하지 않는 경우</li>
+ *     <li>모든 {@link Writer} Bean 이 작성 가능한 상태가 아닌 경우</li>
+ *     <li>작성할 {@link CollectedDataDto 수집 데이터}가 존재하지 않는 경우 </li>
+ * </ul>
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
