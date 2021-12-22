@@ -18,8 +18,10 @@ public class DataCollectController {
 
     @PostMapping
     @Operation(summary = "데이터 수집 요청")
-    public CommonResponse<DataCollectRespDto> collectRequest(@RequestBody DataCollectReqDto dataCollectReqDto) {
+    public CommonResponse<DataCollectRespDto> collectRequest(//FIXME 요청 DTO 에 대한 Validation 이 누락되어있다.
+                                                             @RequestBody DataCollectReqDto dataCollectReqDto) {
         InMemoryRepository.save(dataCollectReqDto);
+        //FIXME 응답 데이터가 항상 성공이다.
         return CommonResponse.of(new DataCollectRespDto());
     }
 }
