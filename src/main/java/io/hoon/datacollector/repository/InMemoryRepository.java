@@ -34,6 +34,7 @@ public class InMemoryRepository {
      */
     public List<CollectedDataDto> getData() {
         List<CollectedDataDto> rtn = new ArrayList<>();
+        //FIXME while 도는 것 보다는 LinkedBlockingQueue.drainTo() 를 사용하는 것이 나아보임
         while (!this.repository.isEmpty()) {
             rtn.add(this.repository.poll());
         }
