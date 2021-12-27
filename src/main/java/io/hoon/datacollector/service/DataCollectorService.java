@@ -1,11 +1,13 @@
 package io.hoon.datacollector.service;
 
+import io.hoon.datacollector.common.event.DataCollectEvent;
 import io.hoon.datacollector.dto.CollectedDataDto;
 import io.hoon.datacollector.dto.DataCollectReqDto;
 import io.hoon.datacollector.dto.DataCollectRespDto;
 import io.hoon.datacollector.repository.InMemoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,9 +19,24 @@ import org.springframework.stereotype.Service;
 public class DataCollectorService {
 
     private final InMemoryRepository inMemoryRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
+    /**
+     * 요청 받은 데이터를 임시 저장소에 저장하고 {@link DataCollectEvent 데이터 수집 이벤트}를 발행합니다.
+     *
+     * @param dataCollectReqDto 수집 요청 데이터
+     * @return 데이터 수집 결과
+     * @see io.hoon.datacollector.manager.DataWriteManager
+     */
     public DataCollectRespDto collectData(DataCollectReqDto dataCollectReqDto) {
+        // 데이터 임시 저장
         boolean result = inMemoryRepository.save(dataCollectReqDto);
+
+        // 이벤트 발행
+        if (result) {
+            applicationEventPublisher.publishEvent(new DataCollectEvent());
+        }
+
         return new DataCollectRespDto()
             .setProdType(dataCollectReqDto.getProdType())
             .setDataType(dataCollectReqDto.getDataType())
