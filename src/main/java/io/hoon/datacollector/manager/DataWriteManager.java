@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,6 +28,7 @@ public class DataWriteManager {
     private final DataCollectorService dataCollectorService;
     private final List<Writer> writers;
 
+    @Async
     public void writeDataTask() throws Exception {
         Optional<Writer> anyWritableWriter = writers.stream().filter(Writer::isWritable).findAny();
         if (anyWritableWriter.isEmpty()) {
