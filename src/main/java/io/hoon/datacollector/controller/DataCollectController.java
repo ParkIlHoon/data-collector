@@ -27,6 +27,13 @@ public class DataCollectController {
     public CommonResponse<DataCollectRespDto> collectRequest(@Parameter(name = "데이터 수집 요청 DTO", required = true)
                                                              @RequestBody
                                                              @Valid DataCollectReqDto dataCollectReqDto) {
-        return CommonResponse.of(dataCollectorService.collectData(dataCollectReqDto));
+        DataCollectRespDto respDto = null;
+        try {
+            respDto = dataCollectorService.collectData(dataCollectReqDto);
+        } catch (InterruptedException e) {
+            respDto = new DataCollectRespDto().setDataType(dataCollectReqDto.getDataType()).setProdType(dataCollectReqDto.getProdType()).setSuccess(false);
+        } finally {
+            return CommonResponse.of(respDto);
+        }
     }
 }

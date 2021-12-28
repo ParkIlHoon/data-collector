@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,10 +27,7 @@ public class DataWriteManager {
     private final DataCollectorService dataCollectorService;
     private final List<Writer> writers;
 
-    //FIXME 비동기->비동기는 위험해보임. 병렬처리가 늘어난다는점은 동시성 이슈에 취약해져 간다는 것이고 Thread 로 계속해서 뭔가를 비동기 처리하는건 상당히 위험해서 고민하고 써야함
-    @Async
     public void writeDataTask() throws Exception {
-        //FIXME 현재는 그렇지 않지만, Writer 구현체의 isWritable 구현에 따라서 동시성 이슈가 발생할 수 있음
         Optional<Writer> anyWritableWriter = writers.stream().filter(Writer::isWritable).findAny();
         if (anyWritableWriter.isEmpty()) {
             log.info("현재 작성 가능한 Writer 가 존재하지 않아 건너뜁니다.");

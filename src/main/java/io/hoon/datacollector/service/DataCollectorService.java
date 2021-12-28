@@ -1,5 +1,6 @@
 package io.hoon.datacollector.service;
 
+import io.hoon.datacollector.common.aop.PublishDataCollectEvent;
 import io.hoon.datacollector.common.event.DataCollectEvent;
 import io.hoon.datacollector.dto.CollectedDataDto;
 import io.hoon.datacollector.dto.DataCollectReqDto;
@@ -8,7 +9,6 @@ import io.hoon.datacollector.repository.InMemoryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,30 +21,23 @@ import org.springframework.stereotype.Service;
 public class DataCollectorService {
 
     private final InMemoryRepository inMemoryRepository;
-    private final ApplicationEventPublisher applicationEventPublisher;
 
     /**
-     * 요청 받은 데이터를 임시 저장소에 저장하고 {@link DataCollectEvent 데이터 수집 이벤트}를 발행합니다.
+     * 요청 받은 데이터를 임시 저장소에 저장합니다.
      *
      * @param dataCollectReqDto 수집 요청 데이터
      * @return 데이터 수집 결과
-     * @see io.hoon.datacollector.manager.DataWriteManager
+     * @see PublishDataCollectEvent
+     * @see io.hoon.datacollector.common.aop.AopAdvisor
      */
-    public DataCollectRespDto collectData(DataCollectReqDto dataCollectReqDto) {
+    @PublishDataCollectEvent
+    public DataCollectRespDto collectData(DataCollectReqDto dataCollectReqDto) throws InterruptedException {
         // 데이터 임시 저장
-        boolean result = inMemoryRepository.save(dataCollectReqDto);
-
-        // 이벤트 발행
-        //FIXME 일부러 심플하게 한 것이라면 패스, AOP 로 이벤트를 발행해도 괜찮을 것 같음
-        if (result) {
-            applicationEventPublisher.publishEvent(new DataCollectEvent());
-            log.info("이벤트를 발행했습니다.");
-        }
-
+        inMemoryRepository.save(dataCollectReqDto);
         return new DataCollectRespDto()
             .setProdType(dataCollectReqDto.getProdType())
             .setDataType(dataCollectReqDto.getDataType())
-            .setSuccess(result);
+            .setSuccess(true);
     }
 
     public List<CollectedDataDto> getData() {

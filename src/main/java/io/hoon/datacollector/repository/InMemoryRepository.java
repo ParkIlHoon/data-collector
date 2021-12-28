@@ -17,12 +17,11 @@ public class InMemoryRepository {
 
     private Queue<CollectedDataDto> repository = new LinkedBlockingQueue<>();
 
-    public boolean save(DataCollectReqDto dataCollectReqDto) {
-        //FIXME 결과를 리턴해 클라이언트에서의 처리를 늘리는 것 보다 put 으로 큐에 저장될 때 까지 대기하는 것이 간단하고 나을 것 같음
-        return this.repository.offer(new CollectedDataDto()
-                .setProdType(dataCollectReqDto.getProdType())
-                .setDataType(dataCollectReqDto.getDataType())
-                .setData(dataCollectReqDto.getData()));
+    public void save(DataCollectReqDto dataCollectReqDto) throws InterruptedException {
+        ((LinkedBlockingQueue)this.repository).put(new CollectedDataDto()
+            .setProdType(dataCollectReqDto.getProdType())
+            .setDataType(dataCollectReqDto.getDataType())
+            .setData(dataCollectReqDto.getData()));
     }
 
     /**
