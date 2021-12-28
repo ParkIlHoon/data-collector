@@ -35,6 +35,7 @@ public class DataCollectorService {
         boolean result = inMemoryRepository.save(dataCollectReqDto);
 
         // 이벤트 발행
+        //FIXME 일부러 심플하게 한 것이라면 패스, AOP 로 이벤트를 발행해도 괜찮을 것 같음
         if (result) {
             applicationEventPublisher.publishEvent(new DataCollectEvent());
             log.info("이벤트를 발행했습니다.");
