@@ -1,0 +1,83 @@
+version: '3.9'
+
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    container_name: es01
+    environment:
+      - node.name=es01
+      # 클러스터명. 노드들을 묶는다. (default: elasticsearch)
+      - cluster.name=es-data-collector-cluster
+      # 바인딩 할 원격 노드의 IP 또는 도메인 주소
+      - discovery.seed_hosts=es02,es03
+      # 마스터 노드 대상
+      - cluster.initial_master_nodes=es01,es02,es03
+      # Elasticsearch가 사용중인 힙메모리 영역을 다른 자바 프로그램이 간섭 못하도록 미리 점유하는 설정. true 권장
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    networks:
+      - elastic-data-collector
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    container_name: es02
+    environment:
+      - node.name=es02
+      # 클러스터명. 노드들을 묶는다. (default: elasticsearch)
+      - cluster.name=es-data-collector-cluster
+      # 바인딩 할 원격 노드의 IP 또는 도메인 주소
+      - discovery.seed_hosts=es01,es03
+      # 마스터 노드 대상
+      - cluster.initial_master_nodes=es01,es02,es03
+      # Elasticsearch가 사용중인 힙메모리 영역을 다른 자바 프로그램이 간섭 못하도록 미리 점유하는 설정. true 권장
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - elastic-data-collector
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+    container_name: es03
+    environment:
+      - node.name=es03
+      # 클러스터명. 노드들을 묶는다. (default: elasticsearch)
+      - cluster.name=es-data-collector-cluster
+      # 바인딩 할 원격 노드의 IP 또는 도메인 주소
+      - discovery.seed_hosts=es01,es02
+      # 마스터 노드 대상
+      - cluster.initial_master_nodes=es01,es02,es03
+      # Elasticsearch가 사용중인 힙메모리 영역을 다른 자바 프로그램이 간섭 못하도록 미리 점유하는 설정. true 권장
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    networks:
+      - elastic-data-collector
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
+
+networks:
+  elastic-data-collector:
+    driver: bridge
