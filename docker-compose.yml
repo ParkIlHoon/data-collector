@@ -4,7 +4,9 @@ services:
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: es01
+    restart: always
     environment:
+      # 노드명
       - node.name=es01
       # 클러스터명. 노드들을 묶는다. (default: elasticsearch)
       - cluster.name=es-data-collector-cluster
@@ -28,7 +30,9 @@ services:
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: es02
+    restart: always
     environment:
+      # 노드명
       - node.name=es02
       # 클러스터명. 노드들을 묶는다. (default: elasticsearch)
       - cluster.name=es-data-collector-cluster
@@ -50,7 +54,9 @@ services:
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
     container_name: es03
+    restart: always
     environment:
+      # 노드명
       - node.name=es03
       # 클러스터명. 노드들을 묶는다. (default: elasticsearch)
       - cluster.name=es-data-collector-cluster
@@ -67,6 +73,17 @@ services:
       memlock:
         soft: -1
         hard: -1
+    networks:
+      - elastic-data-collector
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.16.2
+    container_name: kibana
+    restart: always
+    environment:
+      ELASTICSEARCH_HOSTS: '["http://es01:9200","http://es02:9200","http://es03:9200"]'
+    ports:
+      - 5601:5601
     networks:
       - elastic-data-collector
 
