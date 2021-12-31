@@ -87,6 +87,20 @@ services:
     networks:
       - elastic-data-collector
 
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.16.2
+    container_name: logstash
+    restart: always
+    environment:
+      MONITORING_ELASTICSEARCH_HOSTS: '["http://es01:9200","http://es02:9200","http://es03:9200"]'
+    ports:
+      - 5000:5000
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+      - /Users/nhn/data-collector:/source-data
+    networks:
+      - elastic-data-collector
+
 volumes:
   data01:
     driver: local
