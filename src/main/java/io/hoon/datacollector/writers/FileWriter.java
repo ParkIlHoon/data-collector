@@ -10,6 +10,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,12 +29,23 @@ import org.springframework.stereotype.Component;
 public class FileWriter implements Writer{
 
     private static final String SEPARATOR = "\n";
+    private static final String TEMP_PATH = "/temp";
     private final ObjectMapper objectMapper;
 
     @Value("${writer.file.root-path:/}")
     private String fileRootPath;
 
     private Path filePath;
+
+    /**
+     * 파일 디렉토리를 생성합니다.
+     * @throws IOException
+     */
+    @PostConstruct
+    void initialize() throws IOException {
+        Files.createDirectories(Path.of(this.fileRootPath));
+        Files.createDirectories(Path.of(this.fileRootPath, TEMP_PATH));
+    }
 
     @Override
     public boolean isWritable() {
@@ -66,10 +78,31 @@ public class FileWriter implements Writer{
      * @throws IOException
      */
     private void createFile() throws IOException {
+        moveTempFileToStage();
+        createTempFile();
+    }
+
+    /**
+     * 임시 파일이 존재할 경우, data shipper 가 수집하는 디렉토리로 이동시킵니다.
+     * @throws IOException
+     */
+    private void moveTempFileToStage() throws IOException {
+        if (this.filePath != null) {
+            Files.move(this.filePath, Path.of(this.fileRootPath, this.filePath.getFileName().toString()));
+            log.info("파일이 이동되었습니다.");
+            this.filePath = null;
+        }
+    }
+
+    /**
+     * 임시 파일을 생성합니다.
+     * @throws IOException
+     */
+    private void createTempFile() throws IOException {
         String fileName = createFileName();
-        Path path = Path.of(this.fileRootPath, fileName);
+        Path path = Path.of(this.fileRootPath, TEMP_PATH, fileName);
         this.filePath = Files.write(path, "".getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
-        log.info("파일이 생성되었습니다.");
+        log.info("임시 파일이 생성되었습니다.");
     }
 
     private String createFileName() {
