@@ -98,6 +98,7 @@ services:
     volumes:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
       - /Users/nhn/data-collector:/source-data
+      - /Users/nhn/data-collector/logs:/logs
     networks:
       - elastic-data-collector
 

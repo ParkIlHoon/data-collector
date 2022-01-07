@@ -1,7 +1,7 @@
 package io.hoon.datacollector.service;
 
 import io.hoon.datacollector.common.aop.PublishDataCollectEvent;
-import io.hoon.datacollector.common.event.DataCollectEvent;
+import io.hoon.datacollector.common.utils.HttpRequestUtil;
 import io.hoon.datacollector.dto.CollectedDataDto;
 import io.hoon.datacollector.dto.DataCollectReqDto;
 import io.hoon.datacollector.dto.DataCollectRespDto;
@@ -32,8 +32,15 @@ public class DataCollectorService {
      */
     @PublishDataCollectEvent
     public DataCollectRespDto collectData(DataCollectReqDto dataCollectReqDto) throws InterruptedException {
+        CollectedDataDto collectedDataDto = new CollectedDataDto()
+            .setProdType(dataCollectReqDto.getProdType())
+            .setDataType(dataCollectReqDto.getDataType())
+            .setClientIp(HttpRequestUtil.getRemoteIp())
+            .setClientLocale(HttpRequestUtil.getLocale().getISO3Country())
+            .setData(dataCollectReqDto.getData());
+
         // 데이터 임시 저장
-        inMemoryRepository.save(dataCollectReqDto);
+        inMemoryRepository.save(collectedDataDto);
         return new DataCollectRespDto()
             .setProdType(dataCollectReqDto.getProdType())
             .setDataType(dataCollectReqDto.getDataType())

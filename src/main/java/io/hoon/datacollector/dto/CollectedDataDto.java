@@ -11,4 +11,6 @@ public class CollectedDataDto {
     private String dataType;
     private String data;
     private ZonedDateTime collectedDateTime = ZonedDateTime.now();
+    private String clientIp;
+    private String clientLocale;
 }

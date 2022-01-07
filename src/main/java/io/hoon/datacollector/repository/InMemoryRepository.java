@@ -1,7 +1,6 @@
 package io.hoon.datacollector.repository;
 
 import io.hoon.datacollector.dto.CollectedDataDto;
-import io.hoon.datacollector.dto.DataCollectReqDto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -17,11 +16,8 @@ public class InMemoryRepository {
 
     private Queue<CollectedDataDto> repository = new LinkedBlockingQueue<>();
 
-    public void save(DataCollectReqDto dataCollectReqDto) throws InterruptedException {
-        ((LinkedBlockingQueue)this.repository).put(new CollectedDataDto()
-            .setProdType(dataCollectReqDto.getProdType())
-            .setDataType(dataCollectReqDto.getDataType())
-            .setData(dataCollectReqDto.getData()));
+    public void save(CollectedDataDto collectedDataDto) throws InterruptedException {
+        ((LinkedBlockingQueue)this.repository).put(collectedDataDto);
     }
 
     /**
