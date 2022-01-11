@@ -9,7 +9,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 public class HttpRequestUtil {
 
-    private static final String[] REMOTE_IP_HEADERS = { "X-Forwarded-For" };
+    private static final String[] REMOTE_IP_HEADERS = { "X-Forwarded-For" , "Proxy-Client-IP", "WL-Proxy-Client-IP", "HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED",
+                                                        "HTTP_X_CLUSTER_CLIENT_IP", "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"};
 
     /**
      * 클라이언트의 IP를 반환합니다.
