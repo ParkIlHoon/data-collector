@@ -1,4 +1,4 @@
-package io.hoon.datacollector.dto;
+package io.hoon.datacollector.domain;
 
 import java.time.ZonedDateTime;
 import lombok.Data;
@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class CollectedDataDto {
+public class CollectedData {
     private String prodType;
     private String dataType;
     private String data;

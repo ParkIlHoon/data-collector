@@ -1,6 +1,6 @@
 package io.hoon.datacollector.repository;
 
-import io.hoon.datacollector.dto.CollectedDataDto;
+import io.hoon.datacollector.domain.CollectedData;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -14,18 +14,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class InMemoryRepository {
 
-    private Queue<CollectedDataDto> repository = new LinkedBlockingQueue<>();
+    private Queue<CollectedData> repository = new LinkedBlockingQueue<>();
 
-    public void save(CollectedDataDto collectedDataDto) throws InterruptedException {
-        ((LinkedBlockingQueue)this.repository).put(collectedDataDto);
+    public void save(CollectedData collectedData) throws InterruptedException {
+        ((LinkedBlockingQueue)this.repository).put(collectedData);
     }
 
     /**
      * 임시 저장된 모든 데이터를 조회합니다.
-     * @return 임시 저장된 모든 {@link CollectedDataDto 수집 데이터}
+     * @return 임시 저장된 모든 {@link CollectedData 수집 데이터}
      */
-    public List<CollectedDataDto> getData() {
-        List<CollectedDataDto> rtn = new ArrayList<>();
+    public List<CollectedData> getData() {
+        List<CollectedData> rtn = new ArrayList<>();
         ((LinkedBlockingQueue) this.repository).drainTo(rtn);
         return rtn;
     }

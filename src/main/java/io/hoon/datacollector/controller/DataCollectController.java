@@ -1,6 +1,8 @@
 package io.hoon.datacollector.controller;
 
 import io.hoon.datacollector.common.dto.CommonResponse;
+import io.hoon.datacollector.common.utils.HttpRequestUtil;
+import io.hoon.datacollector.domain.CollectedData;
 import io.hoon.datacollector.dto.DataCollectReqDto;
 import io.hoon.datacollector.dto.DataCollectRespDto;
 import io.hoon.datacollector.service.DataCollectorService;
@@ -30,10 +32,17 @@ public class DataCollectController {
                                                              @RequestBody
                                                              @Valid DataCollectReqDto dataCollectReqDto) {
         DataCollectRespDto respDto = new DataCollectRespDto().setDataType(dataCollectReqDto.getDataType()).setProdType(dataCollectReqDto.getProdType()).setSuccess(false);
+        CollectedData collectedData = new CollectedData()
+            .setProdType(dataCollectReqDto.getProdType())
+            .setDataType(dataCollectReqDto.getDataType())
+            .setClientIp(HttpRequestUtil.getRemoteIp())
+            .setClientLocale(HttpRequestUtil.getLocale().getISO3Country())
+            .setData(dataCollectReqDto.getData());
+
         try {
-            respDto = dataCollectorService.collectData(dataCollectReqDto);
+            respDto = dataCollectorService.collectData(collectedData);
         } catch (InterruptedException e) {
-            log.info("데이터 수집 중 에러 발생!! " + e.getMessage());
+            log.error("데이터 수집 중 에러 발생!! " + e.getMessage());
         }
         return CommonResponse.of(respDto);
     }

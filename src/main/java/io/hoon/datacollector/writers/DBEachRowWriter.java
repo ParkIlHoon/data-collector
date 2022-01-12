@@ -1,6 +1,6 @@
 package io.hoon.datacollector.writers;
 
-import io.hoon.datacollector.dto.CollectedDataDto;
+import io.hoon.datacollector.domain.CollectedData;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class DBEachRowWriter implements Writer{
     }
 
     @Override
-    public void write(Collection<CollectedDataDto> dataCollection) throws Exception {
+    public void write(Collection<CollectedData> dataCollection) throws Exception {
         //TODO
     }
 }

@@ -1,6 +1,6 @@
 package io.hoon.datacollector.writers;
 
-import io.hoon.datacollector.dto.CollectedDataDto;
+import io.hoon.datacollector.domain.CollectedData;
 import java.util.Collection;
 
 /**
@@ -25,5 +25,5 @@ public interface Writer {
      * @param dataCollection 작성할 데이터 컬렉션
      * @throws Exception
      */
-    void write(Collection<CollectedDataDto> dataCollection) throws Exception;
+    void write(Collection<CollectedData> dataCollection) throws Exception;
 }

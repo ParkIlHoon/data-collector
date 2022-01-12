@@ -1,7 +1,7 @@
 package io.hoon.datacollector.writers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.hoon.datacollector.dto.CollectedDataDto;
+import io.hoon.datacollector.domain.CollectedData;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -43,9 +43,9 @@ public class FileWriter implements Writer{
     }
 
     @Override
-    public void write(Collection<CollectedDataDto> dataCollection) throws IOException {
+    public void write(Collection<CollectedData> dataCollection) throws IOException {
         StringBuffer stringBuffer = new StringBuffer();
-        for (CollectedDataDto collectedData : dataCollection) {
+        for (CollectedData collectedData : dataCollection) {
             stringBuffer.append(objectMapper.writeValueAsString(collectedData));
             stringBuffer.append(SEPARATOR);
         }
@@ -69,7 +69,7 @@ public class FileWriter implements Writer{
      */
     private void createFile() throws IOException {
         Path path = Path.of(this.fileRootPath, createFileName());
-        this.filePath = Files.write(path, "".getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
+        this.filePath = Files.createFile(path);
         log.info("파일이 생성되었습니다.");
     }
 
