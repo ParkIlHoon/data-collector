@@ -1,5 +1,6 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/parkilhoon/data-collector/badge)](https://www.codefactor.io/repository/github/parkilhoon/data-collector)
 [![CircleCI](https://circleci.com/gh/ParkIlHoon/data-collector/tree/main.svg?style=svg)](https://circleci.com/gh/ParkIlHoon/data-collector/tree/main)
+[![codecov](https://codecov.io/gh/ParkIlHoon/data-collector/branch/main/graph/badge.svg?token=QZUKOYV553)](https://codecov.io/gh/ParkIlHoon/data-collector)
 # 여러가지 기술을 찍먹하기 위한 데이터 수집 프로젝트
 개발 및 개선 과정을 단계별로 Branch 구성했으며, 구현의도는 주석에, 피드백 내용은 FIXME 주석에 담았습니다.
 
