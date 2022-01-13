@@ -19,7 +19,8 @@ jobs:
       - run: |
           ./gradlew test
           ./gradlew build
-      - codecov/upload
+      - codecov/upload:
+          file: './coverage/clover.xml'
 
 workflows:
   my-custom-workflow:
