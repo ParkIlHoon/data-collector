@@ -1,4 +1,7 @@
 version: 2.1
+orbs:
+  codecov: codecov/codecov@3.0.0
+
 executors:
   my-custom-executor:
     docker:
@@ -9,16 +12,16 @@ executors:
           username: $DOCKER_HUB_USER
           password: $DOCKER_HUB_PASSWORD
 jobs:
-  my-job-name:
-
+  build-jar:
     executor: my-custom-executor
     steps:
       - checkout
       - run: |
-          # echo Hello, World!
+          ./gradlew test
           ./gradlew build
+      - codecov/upload
 
 workflows:
   my-custom-workflow:
     jobs:
-      - my-job-name
+      - build-jar
