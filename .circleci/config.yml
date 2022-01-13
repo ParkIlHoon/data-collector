@@ -1,0 +1,10 @@
+version: 2.1
+
+jobs:
+  checkout-and-build:
+    docker:
+      - image: cimg/openjdk:11.0
+    steps:
+      - checkout
+      - run:
+          command: ./gradlew build
