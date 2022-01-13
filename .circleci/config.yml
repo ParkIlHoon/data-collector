@@ -1,0 +1,24 @@
+version: 2.1
+executors:
+  my-custom-executor:
+    docker:
+      - image: cimg/openjdk:11.0
+        auth:
+          # ensure you have first added these secrets
+          # visit app.circleci.com/settings/project/github/ParkIlHoon/data-collector/environment-variables
+          username: $DOCKER_HUB_USER
+          password: $DOCKER_HUB_PASSWORD
+jobs:
+  my-job-name:
+
+    executor: my-custom-executor
+    steps:
+      - checkout
+      - run: |
+          # echo Hello, World!
+          ./gradlew build
+
+workflows:
+  my-custom-workflow:
+    jobs:
+      - my-job-name
