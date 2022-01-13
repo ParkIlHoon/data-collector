@@ -14,6 +14,19 @@
 7. [피드백 반영 (07 fix-feedback 브랜치)](https://github.com/ParkIlHoon/data-collector/tree/07_fix-feedback)
 8. [피드백 반영 (08_fix-feedback 브랜치)](https://github.com/ParkIlHoon/data-collector/tree/08_fix-feedback)
 
+## Swagger
+http://127.0.0.1:8080/swagger-ui/index.html
+
+## 구동 방법
+1. docker 컨테이너를 띄웁니다.
+```shell
+docker compose up -d
+```
+3. `http://127.0.0.1:5601` 으로 접속해 Kibana가 정상적으로 구동되는지 확인합니다.
+4. `application.properties` 에서 `writer.file.root-path` 속성을 적절한 경로로 변경합니다.
+5. 애플리케이션을 구동합니다.
+6. `http://127.0.0.1:8080/data` 로 수집할 데이터를 요청합니다.
+
 ## 설계
 ### 1. 초기 개발
 ![초기 개발](https://github.com/ParkIlHoon/data-collector/blob/02_re-design-collector/design/1%EC%B0%A8%20%EC%84%A4%EA%B3%84.png)
