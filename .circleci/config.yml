@@ -20,7 +20,7 @@ jobs:
           ./gradlew test
           ./gradlew build
       - codecov/upload:
-          file: './coverage/clover.xml'
+          file: './build/reports/jacoco/test/jacocoTestReport.xml'
 
 workflows:
   my-custom-workflow:
