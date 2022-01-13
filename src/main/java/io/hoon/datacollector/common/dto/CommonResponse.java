@@ -21,8 +21,8 @@ public class CommonResponse<T> {
         ret.setResult(result);
         return ret;
     }
-
+    @SuppressWarnings("squid:S3740")
     public static CommonResponse empty() {
-        return new CommonResponse<>();
+        return new CommonResponse();
     }
 }

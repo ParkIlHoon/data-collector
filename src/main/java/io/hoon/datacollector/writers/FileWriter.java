@@ -44,12 +44,12 @@ public class FileWriter implements Writer{
 
     @Override
     public void write(Collection<CollectedData> dataCollection) throws IOException {
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         for (CollectedData collectedData : dataCollection) {
-            stringBuffer.append(objectMapper.writeValueAsString(collectedData));
-            stringBuffer.append(SEPARATOR);
+            stringBuilder.append(objectMapper.writeValueAsString(collectedData));
+            stringBuilder.append(SEPARATOR);
         }
-        String valueAsString = stringBuffer.toString();
+        String valueAsString = stringBuilder.toString();
         Files.write(this.filePath, valueAsString.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 

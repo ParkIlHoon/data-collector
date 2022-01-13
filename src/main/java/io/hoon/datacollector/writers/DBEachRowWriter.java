@@ -18,12 +18,12 @@ public class DBEachRowWriter implements Writer{
 
     @Override
     public boolean isWritable() {
-        //TODO
+        // 스펙에 따라 구현
         return false;
     }
 
     @Override
     public void write(Collection<CollectedData> dataCollection) throws Exception {
-        //TODO
+        // 스펙에 따라 구현
     }
 }

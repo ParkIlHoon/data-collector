@@ -28,6 +28,7 @@ public class DataCollectController {
 
     @PostMapping
     @Operation(summary = "데이터 수집 요청")
+    @SuppressWarnings("squid:S2142")
     public CommonResponse<DataCollectRespDto> collectRequest(@Parameter(name = "데이터 수집 요청 DTO", required = true)
                                                              @RequestBody
                                                              @Valid DataCollectReqDto dataCollectReqDto) {

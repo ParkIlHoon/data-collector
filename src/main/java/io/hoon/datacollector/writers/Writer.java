@@ -25,5 +25,6 @@ public interface Writer {
      * @param dataCollection 작성할 데이터 컬렉션
      * @throws Exception
      */
+    @SuppressWarnings("squid:S112")
     void write(Collection<CollectedData> dataCollection) throws Exception;
 }

@@ -40,6 +40,14 @@ public class HttpRequestUtil {
      * @return Accept-Language 헤더를 통해 클라이언트로부터 전달받은 Locale 정보
      */
     public static Locale getLocale() {
-        return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getLocale();
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            return Locale.getDefault();
+        }
+        return ((ServletRequestAttributes) requestAttributes).getRequest().getLocale();
+    }
+
+    private HttpRequestUtil() {
+        throw new IllegalStateException();
     }
 }

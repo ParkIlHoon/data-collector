@@ -51,8 +51,8 @@ public class DataJsonTemplateValidator implements ConstraintValidator<DataJsonTe
      * @return object 여부
      */
     private boolean isObject(JSONObject parsedObject) {
-        for (Object key : parsedObject.keySet()) {
-            if (parsedObject.get(key) instanceof JSONObject == false) {
+        for (Object entry : parsedObject.entrySet()) {
+            if (!(entry instanceof JSONObject)) {
                 return false;
             }
         }
