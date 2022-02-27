@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,8 @@ public class DataCollectController {
             .setDataType(dataCollectReqDto.getDataType())
             .setClientIp(HttpRequestUtil.getRemoteIp())
             .setClientLocale(HttpRequestUtil.getLocale().getISO3Country())
-            .setData(dataCollectReqDto.getData());
+            .setData(dataCollectReqDto.getData())
+            .setSecretKey((String) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
         try {
             respDto = dataCollectorService.collectData(collectedData);

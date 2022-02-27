@@ -1,6 +1,7 @@
 package io.hoon.datacollector.writers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.hoon.datacollector.common.properties.KeyStore;
 import io.hoon.datacollector.domain.CollectedData;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +11,11 @@ import java.nio.file.StandardOpenOption;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,26 +37,31 @@ public class FileWriter implements Writer{
     private static final DateTimeFormatter FILE_NAME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss");
     private static final String FILE_EXT = ".txt";
     private final ObjectMapper objectMapper;
+    private final KeyStore keyStore;
 
     @Value("${writer.file.root-path:/}")
     private String fileRootPath;
 
-    private Path filePath;
+    private Map<String, Path> filePaths = new HashMap<>();
 
     @Override
     public boolean isWritable() {
-        return this.filePath != null && Files.exists(this.filePath);
+        return !this.filePaths.isEmpty() && this.filePaths.values().stream().allMatch(Files::exists);
     }
 
     @Override
     public void write(Collection<CollectedData> dataCollection) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (CollectedData collectedData : dataCollection) {
-            stringBuilder.append(objectMapper.writeValueAsString(collectedData));
-            stringBuilder.append(SEPARATOR);
+        Map<String, List<CollectedData>> collectDataMapByKey = dataCollection.stream().collect(Collectors.groupingBy(CollectedData::getSecretKey));
+        for (Entry<String, List<CollectedData>> entry : collectDataMapByKey.entrySet()) {
+            String key = entry.getKey();
+            StringBuilder stringBuilder = new StringBuilder();
+            for (CollectedData collectedData : entry.getValue()) {
+                stringBuilder.append(objectMapper.writeValueAsString(collectedData));
+                stringBuilder.append(SEPARATOR);
+            }
+            String valueAsString = stringBuilder.toString();
+            Files.write(this.filePaths.get(keyStore.getKeyName(key)), valueAsString.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         }
-        String valueAsString = stringBuilder.toString();
-        Files.write(this.filePath, valueAsString.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
     }
 
     /**
@@ -68,9 +79,12 @@ public class FileWriter implements Writer{
      * @throws IOException
      */
     private void createFile() throws IOException {
-        Path path = Path.of(this.fileRootPath, createFileName());
-        this.filePath = Files.createFile(path);
-        log.info("파일이 생성되었습니다.");
+        for (String keyName : keyStore.getKeys().keySet()) {
+            Path path = Path.of(this.fileRootPath, keyName, createFileName());
+            Files.createDirectories(path.getParent());
+            this.filePaths.put(keyName, Files.createFile(path));
+            log.info("파일이 생성되었습니다.");
+        }
     }
 
     private String createFileName() {
