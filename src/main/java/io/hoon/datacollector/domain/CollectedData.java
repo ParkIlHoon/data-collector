@@ -13,4 +13,5 @@ public class CollectedData {
     private ZonedDateTime collectedDateTime = ZonedDateTime.now();
     private String clientIp;
     private String clientLocale;
+    private String secretKey;
 }
