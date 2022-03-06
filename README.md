@@ -13,6 +13,7 @@
 6. [ELK Stack 연동 (06_elk-stack 브랜치)](https://github.com/ParkIlHoon/data-collector/tree/06_elk-stack)
 7. [피드백 반영 (07 fix-feedback 브랜치)](https://github.com/ParkIlHoon/data-collector/tree/07_fix-feedback)
 8. [피드백 반영 (08_fix-feedback 브랜치)](https://github.com/ParkIlHoon/data-collector/tree/08_fix-feedback)
+9. [인증인가 처리 (09_authentication 브랜치)](https://github.com/ParkIlHoon/data-collector/tree/09_authentication)
 
 ## Swagger
 http://127.0.0.1:8080/swagger-ui/index.html
@@ -71,3 +72,5 @@ docker compose up -d
 * [Try-Catch-Finally 사용시 주의사항](https://tomining.tistory.com/154)
 ### 8. 피드백 반영
 * [Logstash Geoip Filter](https://www.elastic.co/guide/en/logstash/current/plugins-filters-geoip.html)
+### 9. 인증인가 처리
+* [API 인증과 메시지 무결성 확인을 통한 API 보안](https://brunch.co.kr/@sangjinkang/50)
