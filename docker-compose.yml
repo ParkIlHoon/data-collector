@@ -16,9 +16,19 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       # Elasticsearch가 사용중인 힙메모리 영역을 다른 자바 프로그램이 간섭 못하도록 미리 점유하는 설정. true 권장
       - bootstrap.memory_lock=true
+      # X-PACK security 활성화
+      - xpack.security.enabled=true
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.client_authentication=required
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-certificates.p12
+      - xpack.security.authc.api_key.enabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=password123
     volumes:
       - data01:/usr/share/elasticsearch/data
+      - ./elasticsearch/certs:/usr/share/elasticsearch/config/certs
     ulimits:
       memlock:
         soft: -1
@@ -42,9 +52,19 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       # Elasticsearch가 사용중인 힙메모리 영역을 다른 자바 프로그램이 간섭 못하도록 미리 점유하는 설정. true 권장
       - bootstrap.memory_lock=true
+      # X-PACK security 활성화
+      - xpack.security.enabled=true
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.client_authentication=required
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-certificates.p12
+      - xpack.security.authc.api_key.enabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=password123
     volumes:
       - data02:/usr/share/elasticsearch/data
+      - ./elasticsearch/certs:/usr/share/elasticsearch/config/certs
     ulimits:
       memlock:
         soft: -1
@@ -66,9 +86,19 @@ services:
       - cluster.initial_master_nodes=es01,es02,es03
       # Elasticsearch가 사용중인 힙메모리 영역을 다른 자바 프로그램이 간섭 못하도록 미리 점유하는 설정. true 권장
       - bootstrap.memory_lock=true
+      # X-PACK security 활성화
+      - xpack.security.enabled=true
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.client_authentication=required
+      - xpack.security.transport.ssl.keystore.path=certs/elastic-certificates.p12
+      - xpack.security.transport.ssl.truststore.path=certs/elastic-certificates.p12
+      - xpack.security.authc.api_key.enabled=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=password123
     volumes:
       - data03:/usr/share/elasticsearch/data
+      - ./elasticsearch/certs:/usr/share/elasticsearch/config/certs
     ulimits:
       memlock:
         soft: -1
@@ -81,7 +111,12 @@ services:
     container_name: kibana
     restart: always
     environment:
-      ELASTICSEARCH_HOSTS: '["http://es01:9200","http://es02:9200","http://es03:9200"]'
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=password123
+    volumes:
+      - ./elasticsearch/certs:/usr/share/kibana/config/certs
+      - kibanadata:/usr/share/kibana/data
     ports:
       - 5601:5601
     networks:
@@ -108,6 +143,8 @@ volumes:
   data02:
     driver: local
   data03:
+    driver: local
+  kibanadata:
     driver: local
 
 networks:
